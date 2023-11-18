@@ -48,32 +48,6 @@ def run_task(message, routing_key):
             delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE))
     print(" [x] Sent message to: %r" % message)
 
-
-def send_message():
-    contacts = Contacts.objects()
-    for i, contact in enumerate(contacts, start=1):
-        if str(contact.prefer_way) == "email":
-            message = {
-                "task": i,
-                "id": str(contact.id),
-                "email": contact.email,
-                "date": datetime.now().isoformat()
-            }
-            routing_key = 'task_email_queue'
-            run_task(message, routing_key)
-
-        elif str(contact.prefer_way) == "phone":
-            message = {
-                "task": i,
-                "id": str(contact.id),
-                "phone": contact.phone,
-                "date": datetime.now().isoformat()
-            }
-            routing_key = 'task_phone_queue'
-            run_task(message, routing_key)
-
-
 if __name__ == '__main__':
     contacts_seeds()
-    send_message()
     connection.close()
